@@ -5,6 +5,14 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
+    "start": " nodemon node netlify/functions/api.js",
+    "build": "node build.js",
+    "dev": "nodemon server.js",
+    "serve": "serve -s build",
+    "lint": "eslint src",
+    "format": "prettier --write \"src/**/*.js\"",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -21,6 +29,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.6.0",
+    "nodemon": "^3.1.4",
     "serverless-http": "^3.2.0"
   }
 }

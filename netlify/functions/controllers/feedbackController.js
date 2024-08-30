@@ -90,3 +90,12 @@ export const deleteFeedback = async (req, res) => {
     return "Your search has encountered a problem";
   }
 };
+//find all feedbacks
+export const findAllFeedbacks = async (req, res) => {
+  try {
+    const allFeedbacks = await Feedbacks.find();
+    return res.json(allFeedbacks);
+  } catch (error) {
+    return error;
+  }
+};

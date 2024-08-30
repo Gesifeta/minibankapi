@@ -19,15 +19,11 @@ import path from "path";
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
 
-const startServer=()=>{
-    try {
-
-
+const api = express();
+const router = Router();
 dotenv.config();
+
 connectDB();
-
-
-
 api.use(express.json());
 api.use(cors());
 api.use(bodyParser.urlencoded({ extended: true }));
@@ -58,14 +54,14 @@ api.use("/api/", userRoutes);
 api.use("/api/", transactionRoute);
 api.use("/api/", feedbackRoute);
 api.use("/api/", router);
+//
+api.use("/user", (req, res) => {
+   res.send("WELCOME")
+});
 
 
 
-} catch (error) {
-    return error.message;
-}
-}
-const api = express();
-const router = Router();
-startServer();
+// api.listen(process.env.REACT_APP_PORT || 8000, () => {
+//     console.log(`Server is running on PORT ${process.env.REACT_APP_PORT}`);
+// }); 
 export const handler = serverless(api);

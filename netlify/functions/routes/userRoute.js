@@ -1,5 +1,7 @@
 import express from "express";
 
+import  protect  from "../../../middleware/authMiddleware.js";
+
 import {
   findUser,
   loginUser,

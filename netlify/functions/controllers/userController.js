@@ -7,6 +7,12 @@ import Users from "../models/userModel.js";
 //@ access        Public
 export const findUser = async (req, res) => {
   try {
+    if (!req.token) return res.status(401).send(`
+      <div>
+      <h1>Unauthorized Section</h1>
+    <p> please login to get token </p>
+     </div>
+      `);
     const User = await Users.find().select("-password");
     return res.status(200).send(User);
   } catch (error) {

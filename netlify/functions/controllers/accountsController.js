@@ -7,6 +7,9 @@ import Users from "../models/userModel.js";
 //@ access        Public
 export const createAccount = async (req, res) => {
   try {
+    if (!req.isAuthenticated) {
+      return res.json({ message: "You are not authorized to view this page" })
+    }
     const { userid, account, type, firstName, lastName, amount } = req.body;
     if (!account || !type || !amount) {
       return res.json({
@@ -40,6 +43,10 @@ export const createAccount = async (req, res) => {
 //@ access        Private
 export const findAccount = async (req, res) => {
   try {
+    //check if user is authenticated
+    if (!req.isAuthenticated) {
+      return res.json({ message: "You are not authorized to view this page" })
+    }
     const userid = req.params.userid;
     if (!userid) {
       return res.json({ message: "Account IS required" });
@@ -60,6 +67,9 @@ export const findAccount = async (req, res) => {
 //@ access        Private
 export const updateAccount = async (req, res) => {
   try {
+    if (!req.isAuthenticated) {
+      return res.json({ message: "You are not authorized to view this page" })
+    }
     const { account, firstName, lastName, type } = req.body;
     if (!account) {
       return res.json({ message: "Email is required" });

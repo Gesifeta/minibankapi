@@ -5,7 +5,11 @@ const connectDB = async () => {
     return await mongoose
       .connect(
         `mongodb+srv://${process.env.MONGO_DB_ATLAS_USER}:${process.env.MONGO_DB_ATLAS_PASSWORD}@${process.env.MONGO_DB_ATLAS_IP}/minibank?retryWrites=true&w=majority&appName=Cluster0`,
-        { useUnifiedTopology: true }
+        {
+          autoIndex: false,
+          serverSelectionTimeoutMS: 5000,
+          socketTimeoutMS: 45000,      
+        }
       )
       .then(() => {
         console.log(`Database connected`);

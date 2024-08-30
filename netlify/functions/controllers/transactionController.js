@@ -169,6 +169,15 @@ export const findTransaction = async (req, res) => {
     return error;
   }
 };
+//find all transactions
+export const findAllTransaction = async (req, res) => {
+  try {
+    const foundUser = await Transactions.find();
+    return res.json(foundUser);
+  } catch (error) {
+    return error;
+  }
+};
 
 export default {
   createDeposit,
