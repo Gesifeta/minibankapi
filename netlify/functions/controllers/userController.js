@@ -7,12 +7,7 @@ import Users from "../models/userModel.js";
 //@ access        Public
 export const findUser = async (req, res) => {
   try {
-    if (!req.token) return res.status(401).send(`
-      <div>
-      <h1>Unauthorized Section</h1>
-    <p> please login to get token </p>
-     </div>
-      `);
+  
     const User = await Users.find().select("-password");
     return res.status(200).send(User);
   } catch (error) {
@@ -56,8 +51,8 @@ export const createUser = async (req, res) => {
     return error;
   }
 };
-//@ Description   User login
-//@ Route         Post /users/login
+// @ Description   User login
+// @ Route         Post /users/login
 //@ access        Public
 
 export const loginUser = async (req, res) => {
@@ -79,11 +74,19 @@ export const loginUser = async (req, res) => {
           lastName: foundUser.lastName,
           email: foundUser.email,
           isAdmin: foundUser.isAdmin,
-        };
-        // GENERATE TOKEN FOR LOGGED IN USERS
-        const token = GenerateToken(user);
-        res.status(200).json({ message: "Successfuly completed", token });
-      } else {
+        }
+// GENERATE TOKEN FOR LOGGED IN USERS
+const token = GenerateToken(user);
+// Set token in Authorization header
+res.header("Authorization", `Bearer ${token}`);
+// Set token as HTTP-only cookie
+res.cookie('token', token, { 
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+});
+res.status(200).json({ message: "Successfully logged in",token });
+       } else {
         return res.json({ message: "Invalid Password or Email" });
       }
     }
@@ -126,6 +129,20 @@ export const deleteUser = async (req, res) => {
     } else {
       return res.json({ message: "User Successfuly deleted" });
     }
+  } catch (error) {
+    return error;
+  }
+};
+//logout user
+
+export const logoutUser = async (req, res) => {
+  try {
+    req.headers["authorization"] = "";
+    res.cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    return res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     return error;
   }

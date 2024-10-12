@@ -1,6 +1,5 @@
 import express from "express";
-
-import  protect  from "../../../middleware/authMiddleware.js";
+import authMiddleware from "./../middleware/authMiddleware.js"
 
 import {
   findUser,
@@ -8,13 +7,15 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  logoutUser,
 } from "../controllers/userController.js";
 const route = express.Router();
 
 route.post("/user/create", createUser);
-route.get("/user/find", findUser);
+route.get("/user/find",authMiddleware, findUser);
 route.post("/user/login", loginUser);
-route.put("/user/update", updateUser);
-route.delete("/user/delete", deleteUser);
+route.put("/user/update",authMiddleware, updateUser);
+route.delete("/user/delete",authMiddleware, deleteUser);
+route.get("/user/logout", logoutUser);
 
 export default route;

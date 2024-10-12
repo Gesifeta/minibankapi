@@ -1,13 +1,8 @@
 
 import * as jwt from 'jsonwebtoken'
 export const userAuthentication = (req, res, next) => {
-    //check if auhorization header exists
-    if (!req.get('Authorization')) {
-        req.isAuthenticated = false
-        return next()
-    }
+    const token = req.header['authorization'].split(' ')[1] //Bearer token
     //check if the request has a valid token
-    const token = req.get('Authorization').split(' ')[1] //Bearer token
     if (!token || token === "") {
         req.isAuthenticated = false
         return next()
@@ -19,7 +14,6 @@ export const userAuthentication = (req, res, next) => {
             req.isAuthenticated = false;
             return next()
         }
-
     } catch (err) {
         req.isAuthenticated = false
         return next()

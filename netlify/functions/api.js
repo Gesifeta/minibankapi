@@ -2,11 +2,10 @@
 
 import serverless from "serverless-http";
 
-import express, { Router } from "express";
+import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
-
 
 import customerRoutes from "./routes/customerRoute.js";
 import accountRoute from "./routes/accountRoute.js";
@@ -15,12 +14,11 @@ import transactionRoute from "./routes/transactionRoute.js";
 import feedbackRoute from "./routes/feedbackRoute.js";
 import connectDB from "./config/db.js";
 import path from "path";
-// import { fileURLToPath } from "url";
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const api = express();
-const router = Router();
 dotenv.config();
 
 connectDB();
@@ -53,15 +51,12 @@ api.use("/api/", accountRoute);
 api.use("/api/", userRoutes);
 api.use("/api/", transactionRoute);
 api.use("/api/", feedbackRoute);
-api.use("/api/", router);
-//
+
 api.use("/user", (req, res) => {
    res.send("WELCOME")
 });
 
-
-
-// api.listen(process.env.REACT_APP_PORT || 8000, () => {
-//     console.log(`Server is running on PORT ${process.env.REACT_APP_PORT}`);
-// }); 
+api.listen(process.env.REACT_APP_PORT || 8000, () => {
+    console.log(`Server is running on PORT ${process.env.REACT_APP_PORT}`);
+}); 
 export const handler = serverless(api);

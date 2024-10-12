@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 
 const connectDB = async () => {
+  // connect to dabatabase with retries
+  
   try {
     return await mongoose
       .connect(
