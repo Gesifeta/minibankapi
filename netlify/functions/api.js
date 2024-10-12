@@ -14,16 +14,18 @@ import transactionRoute from "./routes/transactionRoute.js";
 import feedbackRoute from "./routes/feedbackRoute.js";
 import connectDB from "./config/db.js";
 import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// import { fileURLToPath } from "url";
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const api = express();
 dotenv.config();
 
 connectDB();
 api.use(express.json());
-api.use(cors());
+api.use(cors({
+    origin:  "https://myminibanking.netlify.app",
+}));
 api.use(bodyParser.urlencoded({ extended: true }));
 api.use(express.static(path.join(__dirname, "build")));
 if (
@@ -32,31 +34,21 @@ if (
 ) {
     api.use(express.static("build"));
 }
-api.use((req, res, next) => {
-    //doesn't send response just adjusts it
-    res.header("Access-Control-Allow-Origin", "*"); //* to give access to any origin
-    res.header(
-        "Access-Control-Allow-Headers",
-        "Origin, X-Requested-With, Content-Type, Accept, Authorization" //to give access to all the headers provided
-    );
-    if (req.method === "OPTIONS") {
-        res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET"); //to give access to all the methods provided
-        return res.status(200).json();
-    }
-    next(); //so that other routes can take over
+api.use("/api", customerRoutes);
+api.use("/api", accountRoute);
+api.use("/api", userRoutes);
+api.use("/api", transactionRoute);
+api.use("/api", feedbackRoute);
+api.get("/api/index", (req, res) => {
+   res.send("Welcome to Minibanking API, Designed by Gemechu Gesifeta")
 });
-
-api.use("/api/", customerRoutes);
-api.use("/api/", accountRoute);
-api.use("/api/", userRoutes);
-api.use("/api/", transactionRoute);
-api.use("/api/", feedbackRoute);
-
-api.use("/user", (req, res) => {
-   res.send("WELCOME")
-});
-
-api.listen(process.env.REACT_APP_PORT || 8000, () => {
-    console.log(`Server is running on PORT ${process.env.REACT_APP_PORT}`);
-}); 
-export const handler = serverless(api);
+api.use((error, req, res, next) => {
+    res.status(500)
+    res.send({error: error})
+    console.error(error.stack)
+    next(error)
+  })
+// api.listen(process.env.REACT_APP_PORT || 8000, () => {
+//     console.log(`Server is running on PORT ${process.env.REACT_APP_PORT}`);
+// }); 
+export const handler =  serverless(api);

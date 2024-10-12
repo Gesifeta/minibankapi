@@ -9,7 +9,7 @@ export const findUser = async (req, res) => {
   try {
   
     const User = await Users.find().select("-password");
-    return res.status(200).send(User);
+    return await res.status(200).send(User);
   } catch (error) {
     return error;
   }
